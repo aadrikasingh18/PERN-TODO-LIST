@@ -12,11 +12,20 @@ app.use(cors());
 
 // ROUTES
 
+app.get('/', async (req, res) => {
+    try {
+        res.send("HOME PAGE");
+    }
+    catch (err) {
+        console.log(err.message);
+    }
+})
+
 // CREATE A TODO
 
 app.post('/todos', async (req, res) => {
     try {
-        const {description} = req.body;
+        const { description } = req.body;
         const newTodo = await poolcb.query("INSERT INTO todoDetails (description) VALUES($1) RETURNING *", [description]
         );
         res.json(newTodo.rows[0]);
@@ -46,7 +55,7 @@ app.get('/todos', async (req, res) => {
 // GET SINGLE TODO
 app.get('/todos/:id', async (req, res) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
         const todo = await poolcb.query("SELECT * FROM todoDetails WHERE todo_id = $1", [id]);
         res.json(todo.rows[0]);
     }
@@ -65,8 +74,8 @@ app.put('/todos/:id', async (req, res) => {
         // 2. req.params to specify what type of todo we want
         // So we are going to need both of them to update
 
-        const {id} = req.params;
-        const {description} = req.body;
+        const { id } = req.params;
+        const { description } = req.body;
         const updateTodo = await poolcb.query("UPDATE todoDetails SET description = $1 WHERE todo_id = $2", [description, id]
         );
         // $1 is variable eiske jaga $100 bhi kr skte
@@ -79,17 +88,17 @@ app.put('/todos/:id', async (req, res) => {
 );
 
 // DELETE A TODO
-app.delete("/todos/:id", async (req,res) => {
-    try{
-        const {id} = req.params;
+app.delete("/todos/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
         const deleteTodo = await poolcb.query("DELETE FROM todoDetails WHERE todo_id = $1", [id]);
         res.json("Todo was Deleted")
     }
-    catch(err){
+    catch (err) {
         console.log(err.message);
     }
 });
- 
+
 
 // Server start krne ke liye 
 app.listen(PORT, () => console.log(`Server running on port: http://localhost:${PORT}`));

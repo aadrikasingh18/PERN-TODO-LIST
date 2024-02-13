@@ -43,7 +43,7 @@ app.get('/todos', async (req, res) => {
     try {
         const allTodos = await poolcb.query("SELECT * FROM todoDetails");
         res.json(allTodos.rows);
-        console.log(req.body);
+        // console.log(req.body);
     }
     catch (err) {
         console.log(err.message);
